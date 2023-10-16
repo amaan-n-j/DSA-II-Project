@@ -3,6 +3,7 @@
 #include"../include/kd_collisionSystem.h"
 #include<math.h>
 #include<time.h>
+#include <float.h>
 
 // Create the tree
 // @param - Particle array
@@ -152,7 +153,91 @@ kdtree findNN(kdtree root,Particle* particle, int depth) {
 	return best;
 
 }
-	
+
+// Function to find the k nearest neighbour
+#define MAX_NEIGHBORS 10
+
+// Function to find the k nearest neighbors in the KD-tree
+// @param - kdtree pointer i.e root node
+// @param - particle to find the neighbours
+// @param - k the number of paricels to find
+kdtree* findKNearestNeighbors(kdtree root, Particle* particle, int k) {
+    if (root == NULL) return NULL;
+
+    kdtree* kNearest = (kdtree*)malloc(k * sizeof(kdtree));
+    if (kNearest == NULL) {
+        printf("Mallloc Failed - KNN Array");
+	return NULL;
+    }
+
+    double maxDistance = DBL_MAX;
+
+    findKNearestNeighborsRecursive(root, particle, 0, k, kNearest, &maxDistance);
+
+    return kNearest;
+}
+
+// Recursive function to find k-nearest neighbors in the KD-tree
+// @param - kdtree pointer i.e root node
+// @param - particle whose neighbour to search
+// @param - depth of the tree
+// @param - the k neighbours to find
+// @param - k nearest pointer
+// @param - max distance variable to pointer
+void findKNearestNeighborsRecursive(kdtree root, Particle* particle, int depth, int k, kdtree* kNearest, double* maxDistance) {
+    if (root == NULL) return;
+
+    int axis = depth % 2;
+    kdtree nextSubtree, otherSubtree;
+
+    if (axis == 0) {
+        if (particle->x < root->ball.x) {
+            nextSubtree = root->left;
+            otherSubtree = root->right;
+        } else {
+            nextSubtree = root->right;
+            otherSubtree = root->left;
+        }
+    } else {
+        if (particle->y < root->ball.y) {
+            nextSubtree = root->left;
+            otherSubtree = root->right;
+        } else {
+            nextSubtree = root->right;
+            otherSubtree = root->left;
+        }
+    }
+
+    findKNearestNeighborsRecursive(nextSubtree, particle, depth + 1, k, kNearest, maxDistance);
+
+    double distance = calculateDistance(root->ball, *particle);
+
+    if (kNearest[k - 1] == NULL || distance < *maxDistance) {
+        for (int i = 0; i < k; i++) {
+            if (kNearest[i] == NULL || calculateDistance(kNearest[i]->ball, *particle) > *maxDistance) {
+                kNearest[i] = root;
+                if (i < k - 1) {
+                    kNearest[i + 1] = NULL;
+                }
+                *maxDistance = calculateDistance(kNearest[k - 1]->ball, *particle);
+            }
+        }
+    }
+
+    double radiusSquare = calculateDistance(*particle, kNearest[k - 1]->ball);
+
+    double dist;
+    if (axis == 0) {
+        dist = fabs(root->ball.x - particle->x);
+    } else {
+        dist = fabs(root->ball.y - particle->y);
+    }
+
+    if (radiusSquare >= dist * dist) {
+        findKNearestNeighborsRecursive(otherSubtree, particle, depth + 1, k, kNearest, maxDistance);
+    }
+}
+
 
 //Destroys the kdtree
 //@param  - knode pointer

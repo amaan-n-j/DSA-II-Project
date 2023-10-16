@@ -35,4 +35,8 @@ void propagate_sys(particleSystem* qt_sys, double dt);
 
 void reverse_at_boundry(particleSystem* qt_sys);
 
+kdtree* findKNearestNeighbors(kdtree root, Particle* particle, int k);
+
+void findKNearestNeighborsRecursive(kdtree root, Particle* particle, int depth, int k, kdtree* kNearest, double* maxDistance);
+
 #endif
