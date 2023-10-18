@@ -14,7 +14,6 @@ int iterations = 0;
 int max_iterations = 500;
 double total_comparision = 0;
 
-//pq_CollisionSystem pq_sys;
 particleSystem* qt_sys;
 quadtree_node* QT;
 
@@ -123,10 +122,8 @@ int main(int argc, char* argv[]) {
 
     printf("particle array size id: %d\n",qt_sys->particleCount);
     for(int i = 0 ; i < qt_sys->particleCount ; i++){
-    	//particle = qt_sys->particleArray[i];
         insertParticleQuadtree(&QT, &(qt_sys->particleArray[i]));
     }
-//    display_QT(QT);
 
 
 	// Initialize GLUT and create a window

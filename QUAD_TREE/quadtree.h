@@ -27,7 +27,6 @@ quadtree_node* createquadtree_node(double x, double y, double width, double heig
     node->y = y;
     node->width = width;
     node->height = height;
-    //node->level = 0;
     node->particle_count = 0;
     for (int i = 0; i < MAX_PARTICLES; i++) {
         node->particles[i] = NULL;
@@ -69,10 +68,6 @@ bool isCuttingRegion(double Cx, double Cy, double Rx, double Ry, double radius, 
 void subdivideNode(quadtree_node* node) {
     double subWidth = node->width / 2.0;
     double subHeight = node->height / 2.0;
-    //printf("new width is %lf, new height is %lf\n",subWidth, subHeight);
-//    if(subWidth < 0.001 || subHeight < 0.001){
-//        return;
-//    }
 
     node->children[0] = createquadtree_node(node->x - subWidth / 2, node->y - subHeight / 2, subWidth, subHeight);
     node->children[1] = createquadtree_node(node->x + subWidth / 2, node->y - subHeight / 2, subWidth, subHeight);
@@ -262,9 +257,6 @@ void updateQuadtree(quadtree_node** node, quadtree_node** root) {
     }
 }
 
-//void updateQuadtree(quadtree_node** node, quadtree_node** root) {
-//    
-//}
 
 bool isOverlappingParticles(Particle* p1, Particle* p2){
     double dx = p1->x - p2->x;
@@ -360,9 +352,6 @@ double detectCollisionQuadtree(particleSystem* qt_sys, quadtree_node** node, int
                     handle_collision(p1, p2, qt_sys);
                     
                 }
-//                if (distance == p1->radius + p2->radius){
-//                    bounceOff(p1, p2);
-//                }
                     
             }
         }
@@ -381,20 +370,14 @@ void display_QT(quadtree_node* node){
     if(node->children[0] == NULL){
         for(int i = 0; i < (node->particle_count); i++){
             printf("(%lf , %lf)",(node->particles[i])->x,(node->particles[i])->y);
-            //printf("this particle number %d",i);
         }
         printf("\n");
         return;
     }
-    //printf("ithe\n");
     display_QT(node->children[1]);
-    //printf("ithe 2\n");
     display_QT(node->children[0]);
-    //printf("ithe 3\n");
     display_QT(node->children[2]);
-    //printf("ithe 4\n");
     display_QT(node->children[3]);
-    //printf("ithe 5\n");
     return;
 
 }
