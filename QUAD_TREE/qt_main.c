@@ -8,12 +8,10 @@
 #include "randomParticleGenerator.h"
 #include "particle.h"
 #include "quadtree.h"
-//#include"pq_collisionSystem.h"
-//#define PQ_PARTICLE pq_sys.sys
-// Window size
+
 int width = 1000, height = 1000;
 int iterations = 0;
-int max_iterations = 100;
+int max_iterations = 500;
 double total_comparision = 0;
 
 //pq_CollisionSystem pq_sys;
@@ -51,7 +49,9 @@ void drawCircle(float r, float x, float y){
 // Timer function for ball movement
 void update() {
     // Update the ball position
+
     //printf("current iteration: %d\n",iterations);
+
     iterations ++;
     double comparisons = 0;
 
@@ -61,31 +61,27 @@ void update() {
 
     propagate_sys(qt_sys, dt);
     reverse_at_boundry(qt_sys);
-    clearQuadtree(QT);
-    //QT = createquadtree_node(0, 0, 2, 2);
-    QT = createquadtree_node(0, 0, RIGHT_BOUNDARY - LEFT_BOUNDARY, TOP_BOUNDARY - BOTTOM_BOUNDARY);
-    for(int i = 0 ; i < qt_sys->particleCount ; i++){
-        insertParticleQuadtree(&QT, &(qt_sys->particleArray[i]));
-    }
-    //updateQuadtree(&QT, &QT);
-    if(!correct_quadtree(QT))
-        printf("WRONG quadtree\n");
+
+
+    updateQuadtree(&QT, &QT);
+
     comparisons = detectCollisionQuadtree(qt_sys, &QT, comparisons);  
     //printf("%lf comparisons performed\n",comparisons);
     total_comparision += comparisons;
 
-//    if (iterations > max_iterations) {
-//        total_comparision /= (iterations - 1);
-//        printf("***** SUMMARY *****\n");
-//        printf("No. of particles: %d\n",PARTICLE_COUNT);
-//        printf("max particles per quadtree node: %d\n",MAX_PARTICLES);
-//        printf("size range: %f - %f\n",MIN_RADIUS, MAX_RADIUS);
-//        printf("velocity range: 0 - %f\n", MAX_VELOCITY_COMPONENT);
-//        printf("total iterations: %d\n", iterations-1);
-//        printf("average comparisons per iteration: %lf\n",total_comparision);
-//        // Exit the main loop
-//        glutLeaveMainLoop();
-//    }
+    if (iterations > max_iterations) {
+        total_comparision /= (iterations - 1);
+        printf("***** SUMMARY *****\n");
+        printf("No. of particles: %d\n",PARTICLE_COUNT);
+        printf("max particles per quadtree node: %d\n",MAX_PARTICLES);
+        printf("size range: %f - %f\n",MIN_RADIUS, MAX_RADIUS);
+        printf("velocity range: 0 - %f\n", MAX_VELOCITY_COMPONENT);
+        printf("total iterations: %d\n", iterations-1);
+        printf("average comparisons per iteration: %lf\n",total_comparision);
+        // Exit the main loop
+        glutLeaveMainLoop();
+    }
+
 
     // Redraw the scene
     glutPostRedisplay();

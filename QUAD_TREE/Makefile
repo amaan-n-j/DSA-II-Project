@@ -3,7 +3,7 @@ SIM  = sim
 GFLAGS = -lglut -lGLU -lGL
 IFLAGS = -I
 MFLAGS = -lm
-CFLAGS = -Wall -g3
+CFLAGS = -Wall -Ofast
 #MEMFLAGS = -fsanitize=address
 
 CC = gcc $(IFLAGS) $(CFLAGS)
