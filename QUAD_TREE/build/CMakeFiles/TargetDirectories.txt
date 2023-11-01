@@ -1,0 +1,3 @@
+/home/anvay/COEP/projects/DSA-II-Project/QUAD_TREE/build/CMakeFiles/sim.dir
+/home/anvay/COEP/projects/DSA-II-Project/QUAD_TREE/build/CMakeFiles/edit_cache.dir
+/home/anvay/COEP/projects/DSA-II-Project/QUAD_TREE/build/CMakeFiles/rebuild_cache.dir

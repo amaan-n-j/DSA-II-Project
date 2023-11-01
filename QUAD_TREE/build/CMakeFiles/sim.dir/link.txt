@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/sim.dir/src/particle.c.o CMakeFiles/sim.dir/src/qt_main.c.o CMakeFiles/sim.dir/src/randomParticleGenerator.c.o -o sim  -lm -lGL -lGLU -lglut 
